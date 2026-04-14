@@ -4,7 +4,7 @@ AI-powered **smart energy grid simulation** for the ten largest US cities — de
 
 ## Live Demo
 
-> **[flux-dmikmut.vercel.app](flux-rho-seven.vercel.app)**
+> **[flux-dmikmut.vercel.app](https://flux-rho-seven.vercel.app)**
 
 ---
 
