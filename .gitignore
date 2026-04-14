@@ -1,0 +1,17 @@
+# API keys - never commit these
+backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# macOS
+.DS_Store
