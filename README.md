@@ -1,88 +1,87 @@
 # Flux
 
-AI-inspired **smart energy grid simulation** for the ten largest US cities: demand, renewable supply, storage, risk, and animated inter-city power flows. Built for hackathon demos with a FastAPI backend and a React + Leaflet front end.
+AI-powered **smart energy grid simulation** for the ten largest US cities — demand forecasting, renewable supply, storage, risk scoring, and animated inter-city power flows. Built with a FastAPI backend powered by **Groq AI** and a React + Vite frontend.
 
-## Prerequisites
+## Live Demo
 
-- **Python 3.11+** (3.13 tested)
-- **Node.js 20+** and npm (for the frontend)
+> **[flux-dmikmut.vercel.app](https://flux-dmikmut.vercel.app)**
 
-## Backend (FastAPI)
+---
 
-```powershell
+## What to Demo
+
+1. Pick a **city** and adjust the scenario sliders (temperature, solar, EV load, data centers)
+2. Watch **risk-colored zones** and **animated flow lines** update in real time
+3. Hit **Run Groq AI Prediction** to get live AI-generated demand forecasts per zone
+4. Explore the **Analytics** and **Forecasting** pages for charts and grid insights
+
+---
+
+## Tech Stack
+
+| Layer | Tech |
+|-------|------|
+| Frontend | React + Vite + TypeScript |
+| Backend | FastAPI (Python) |
+| AI Model | Groq API — `llama-3.3-70b-versatile` |
+| Deployment | Vercel (frontend) + Render (backend) |
+
+---
+
+## Run Locally
+
+### 1. Backend
+
+```bash
 cd backend
-pip install -r requirements.txt
-python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+pip3 install -r requirements.txt
 ```
 
-API (default `http://127.0.0.1:8000`):
+Create `backend/.env`:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/city-state` | Current metrics for all 10 cities |
-| POST | `/simulate` | Body: `temperature`, `solar_factor`, `ev_multiplier`, `data_center_multiplier` — updates simulation and returns cities |
-| GET | `/forecast` | Predicted demand for next 3 hours per city |
-| GET | `/energy-flow` | `{ "flows": [ { "from", "to", "mw" } ] }` for visualization |
-| GET | `/recommendations` | Grid stabilization actions |
-| POST | `/ai-query` | Body: `{ "query": "..." }` — short natural-language answers + structured hints |
-| GET | `/health` | Liveness check |
+Start the server:
+```bash
+python3 -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
 
-Interactive docs: `http://127.0.0.1:8000/docs`
+### 2. Frontend
 
-## Frontend (Vite + React + Leaflet)
-
-In a **second** terminal:
-
-```powershell
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The dev server proxies API calls to the backend on port 8000.
+Open `http://localhost:5173` — the dev server proxies API calls to the backend on port 8000.
 
-**Production build:**
+---
 
-```powershell
-cd frontend
-npm run build
-npm run preview
-```
+## Deploy Your Own
 
-Serve `frontend/dist` behind any static host; configure that host to proxy `/simulate`, `/city-state`, `/forecast`, `/energy-flow`, `/recommendations`, and `/ai-query` to the API, or set `VITE_API_BASE` (see below).
+### Backend → Render
+1. New Web Service → connect this repo
+2. Root Directory: `backend`
+3. Build Command: `pip install -r requirements.txt`
+4. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Add environment variable: `GROQ_API_KEY`
 
-### API base URL
+### Frontend → Vercel
+1. New Project → import this repo
+2. Leave Root Directory blank (the `vercel.json` handles it)
+3. Add environment variable: `VITE_API_BASE=https://your-render-url.onrender.com`
 
-By default the app uses same-origin paths (Vite proxy in dev). For a deployed frontend pointing at a remote API, create `frontend/.env`:
+---
 
-```env
-VITE_API_BASE=https://your-api.example.com
-```
+## Cities
 
-Then rebuild; `src/api.ts` prepends this base to requests when set.
+New York City, Los Angeles, Chicago, Houston, Phoenix, Philadelphia, San Antonio, San Diego, Dallas, San Jose
 
-## Cities (fixed set)
-
-New York City, Los Angeles, Chicago, Houston, Phoenix, Philadelphia, San Antonio, San Diego, Dallas, San Jose.
-
-## What to demo
-
-1. Move **scenario sliders** (temperature, solar, EV, data centers) and watch **risk-colored nodes** and **animated flow lines** update.
-2. **Click a city** for demand, renewables, storage, risk, and inbound/outbound flows.
-3. Use the **Decision agent** panel for sample questions (risk, routing, EV scenario).
-4. Open **Swagger** at `/docs` to show the API contract.
-
-## Project layout
-
-```
-Flux/
-  backend/           # FastAPI app + simulation engine
-  frontend/          # React + Leaflet UI
-  README.md
-```
+---
 
 ## Notes
 
-- All numbers are **synthetic** — tuned for visual clarity, not grid certification.
-- Risk bands: low &lt; 50, medium 50–150, high 150–300, critical &gt; 300 (on the internal score).
-- No external ML dependencies; “AI” panel uses lightweight rule + template responses over live simulation state.
+- All simulation numbers are synthetic — tuned for visual clarity
+- Groq API key is required for AI predictions (free tier available at [console.groq.com](https://console.groq.com))
